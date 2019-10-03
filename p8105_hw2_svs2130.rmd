@@ -1,0 +1,23 @@
+---
+title: 'Homework #2'
+author: "Harsha Senapathi"
+date: "10/3/2019"
+output: github_document
+---
+
+# Loading Library
+```{r}
+library(tidyverse)
+library(readxl)
+```
+
+```{r}
+trashwheel = read_excel("./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
+                        sheet = 1, 
+                        range = "A2:N408") %>% 
+  janitor::clean_names() %>%
+  select(-dumpster) %>%
+    mutate(sports_balls = round(sports_balls, digits = 0)) %>% 
+  mutate(sports_balls = as.integer(sports_balls))
+```
+
