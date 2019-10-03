@@ -11,13 +11,20 @@ library(tidyverse)
 library(readxl)
 ```
 
+#Problem 1
+
+The import and manipulation of the Mr. Trash Wheel Dataset.
+
 ```{r}
 trashwheel = read_excel("./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
                         sheet = 1, 
                         range = "A2:N408") %>% 
   janitor::clean_names() %>%
   select(-dumpster) %>%
-    mutate(sports_balls = round(sports_balls, digits = 0)) %>% 
-  mutate(sports_balls = as.integer(sports_balls))
+  mutate(sports_balls = as.integer(round(sports_balls))) %>% 
+  rename("weight" = weight_tons, "volume" = volume_cubic_yards) #renaming columns to more reasonable variable names
 ```
 
+The columns weight_tons and volume_cubic_yards were renamed to weight and volume since mentioning units seems superfluous. It can be mentioned once in the data description to suffice for it.
+
+Import and manipulation of the precipitation data from 2016 and 2017
