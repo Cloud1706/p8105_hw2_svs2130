@@ -15,7 +15,7 @@ library(readxl)
 
 The import and manipulation of the Mr. Trash Wheel Dataset.
 
-```{r}
+```{r p1_import_clean}
 trashwheel = read_excel("./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
                         sheet = 1, 
                         range = "A2:N408") %>% 
@@ -27,4 +27,45 @@ trashwheel = read_excel("./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
 
 The columns weight_tons and volume_cubic_yards were renamed to weight and volume since mentioning units seems superfluous. It can be mentioned once in the data description to suffice for it.
 
-Import and manipulation of the precipitation data from 2016 and 2017
+Import and manipulation of the precipitation data from 2017 and 2018
+
+## Precipitation Dataset
+
+The following code trunk reads and cleans precipitation data for 2017 and 2018. For each, omit rows without precipitation data and add a variable year. Next, combine datasets and convert month to a character variable.
+
+```{r p1_data_import_precip}
+
+data_prcpttn_2017 = 
+    read_excel("./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx", sheet = '2017 Precipitation', range = "A2:B14") %>%
+    janitor::clean_names() %>% 
+    drop_na(total) %>% #delete rows without precipitation data
+    mutate(year = 2017)
+    
+data_prcpttn_2018 = 
+    read_excel("./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx", sheet = '2018 Precipitation', range = "A2:B14") %>%
+    janitor::clean_names() %>% 
+    drop_na(total) %>% #delete rows without precipitation data
+    mutate(year = 2018)
+
+# Combine datasets for years 2017 and 2018
+
+data_prcpttn = bind_rows(data_prcpttn_2017, data_prcpttn_2018) %>% 
+    mutate(month = month.name[month]) %>% 
+    select(year, month, total)
+
+# Check the combined dataset
+head(data_prcpttn)
+tail(data_prcpttn)
+
+```
+
+## Interpretation
+There are `r nrow(data_trashwheel)` observations and `r ncol(data_trashwheel)` variables in the Mr. Trash Wheel dataset, and `r nrow(data_prcpttn)` observations and `r ncol(data_prcpttn)` variables in the precipitation dataset. Key variables in the Mr. Trash Wheel dataset include `weight_tons`, number of different items (such as `sports_balls`) and `homes_powered`. For the precipitation dataset, the key variable is `total`, which denotes the volume of precipitation for each month. The total precipitation in 2017 was `r sum(filter(data_prcpttn_2017, year == 2017)$total)`. The median number of sports balls in a dumpster in 2018 was `r median(filter(data_trashwheel, year == 2018)$sports_balls)`.
+
+#Problem 2
+
+```{r p2_import_clean}
+fithei = read_csv(file = "./data/pols-month.csv") 
+```
+
+
