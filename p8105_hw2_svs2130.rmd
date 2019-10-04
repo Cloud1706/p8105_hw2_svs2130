@@ -5,9 +5,11 @@ date: "10/3/2019"
 output: github_document
 ---
 
+
 # Loading Library
 ```{r}
 library(tidyverse)
+library(tidyr)
 library(readxl)
 ```
 
@@ -65,7 +67,43 @@ There are `r nrow(data_trashwheel)` observations and `r ncol(data_trashwheel)` v
 #Problem 2
 
 ```{r p2_import_clean}
-fithei = read_csv(file = "./data/pols-month.csv") 
+
+#cleaning polls dataset
+polls = read_csv(file = "./data/fivethirtyeight_datasets/pols-month.csv")%>%
+  separate(mon, c("year", "month", "day"), 
+           convert = TRUE)%>%
+  mutate (month = month.name[month])%>%
+  mutate(prez_dem = recode (prez_dem, '1' = "dem")) %>% 
+  mutate(prez_gop = recode (prez_gop, '1' = "gop", '2' = "gop")) %>% 
+  pivot_longer(
+    cols = c("prez_dem", "prez_gop"), 
+    values_to = "president", 
+    values_drop_na = TRUE
+  ) %>% 
+  select(-day, -name)
+
+#cleaning snp dataset
+snp = read_csv(file = "./data/fivethirtyeight_datasets/snp.csv")%>%
+    separate(mon, c("year", "month", "day"), 
+             convert = TRUE)%>%
+   mutate (month = month.name[month])%>%
+  select(year , month, -day, everything())
+
+#cleaning and transforming unemployment data
+unemployment = read_csv("./Data/fivethirtyeight_datasets/unemployment.csv") %>%
+  pivot_longer(Jan:Dec, 
+    names_to = "month",
+    values_to = "rate"
+  ) %>% 
+  mutate(month = match(month, month.abb)) %>%
+  mutate(month = month.name[month]) %>%
+  mutate(Year = as.integer(Year)) %>%
+  janitor::clean_names()
+
+#combining data sets, to create a dataset with polls, snp and unemployent rate.
+
+
 ```
+
 
 
