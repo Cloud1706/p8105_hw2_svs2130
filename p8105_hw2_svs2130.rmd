@@ -13,6 +13,11 @@ library(tidyr)
 library(readxl)
 ```
 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
 #Problem 1
 
 The import and manipulation of the Mr. Trash Wheel Dataset.
@@ -51,18 +56,18 @@ data_prcpttn_2018 =
 
 # Combine datasets for years 2017 and 2018
 
-data_prcpttn = bind_rows(data_prcpttn_2017, data_prcpttn_2018) %>% 
+prcpttn = bind_rows(data_prcpttn_2017, data_prcpttn_2018) %>% 
     mutate(month = month.name[month]) %>% 
     select(year, month, total)
 
 # Check the combined dataset
-head(data_prcpttn)
-tail(data_prcpttn)
+head(prcpttn)
+tail(prcpttn)
 
 ```
 
 ## Interpretation
-There are `r nrow(data_trashwheel)` observations and `r ncol(data_trashwheel)` variables in the Mr. Trash Wheel dataset, and `r nrow(data_prcpttn)` observations and `r ncol(data_prcpttn)` variables in the precipitation dataset. Key variables in the Mr. Trash Wheel dataset include `weight_tons`, number of different items (such as `sports_balls`) and `homes_powered`. For the precipitation dataset, the key variable is `total`, which denotes the volume of precipitation for each month. The total precipitation in 2017 was `r sum(filter(data_prcpttn_2017, year == 2017)$total)`. The median number of sports balls in a dumpster in 2018 was `r median(filter(data_trashwheel, year == 2018)$sports_balls)`.
+There are `r nrow(trashwheel)` observations and `r ncol(trashwheel)` variables in the Mr. Trash Wheel dataset, and `r nrow(prcpttn)` observations and `r ncol(prcpttn)` variables in the precipitation dataset. Key variables in the Mr. Trash Wheel dataset include `weight_tons`, number of different items (such as `sports_balls`) and `homes_powered`. For the precipitation dataset, the key variable is `total`, which denotes the volume of precipitation for each month. The total precipitation in 2017 was `r sum(filter(data_prcpttn_2017, year == 2017)$total)`. The median number of sports balls in a dumpster in 2018 was `r median(filter(trashwheel, year == 2018)$sports_balls)`.
 
 #Problem 2
 
@@ -109,6 +114,13 @@ Final = polls%>%
 
 ```
 
+## Interpretation
+There are `r nrow(polls)`, `r nrow(snp)`, `r nrow(unemployment)`, `r nrow(Final)` observations and `r ncol(polls)`, `r ncol(snp)`, `r ncol(unemployment)`, `r ncol(Final)` in the Polls per month dataset, snp data set, unemployment dataset and the final merged dataset respectively. The final dataset includes some key variables like `ncolnames(Final)`. The range of yeats `r min(pull(polls, year))` to `r min(pull(polls, year))`
+
+#Problem 3:
+
+We are trying to analyze a datasite with popular baby names among males and females.
+
 ```{r}
 pop_names = read_csv(file="./data/popular_Baby_Names.csv")%>%
   janitor::clean_names()%>%
@@ -131,11 +143,17 @@ pop_names %>%
     names_from = "year_of_birth",
     values_from = "childs_first_name"
   )
+```
 
+###Creating a plot matching the rank and count of popular white non-hispanic male names
+
+```{r}
 pop_names %>%
+  #filtering male and white non hispanic children names from the year 2016
   filter(gender == "MALE",
          ethnicity == "WHITE NON HISPANIC",
          year_of_birth == 2016)%>%
+  #creating ggplot
   ggplot(aes(x=rank, y=count)) + 
   geom_point(colour = "purple") +
   labs(
@@ -143,7 +161,6 @@ pop_names %>%
     x = "Popularity Ranking",
     y = "Count"
   )
-  
 ```
 
 
