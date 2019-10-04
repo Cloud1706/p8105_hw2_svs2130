@@ -84,10 +84,10 @@ polls = read_csv(file = "./data/fivethirtyeight_datasets/pols-month.csv")%>%
 
 #cleaning snp dataset
 snp = read_csv(file = "./data/fivethirtyeight_datasets/snp.csv")%>%
-    separate(mon, c("year", "month", "day"), 
+    separate(date, c("year", "month", "day"), 
              convert = TRUE)%>%
    mutate (month = month.name[month])%>%
-  select(year , month, -day, everything())
+  select(year, month, -day, everything())
 
 #cleaning and transforming unemployment data
 unemployment = read_csv("./Data/fivethirtyeight_datasets/unemployment.csv") %>%
@@ -101,7 +101,11 @@ unemployment = read_csv("./Data/fivethirtyeight_datasets/unemployment.csv") %>%
   janitor::clean_names()
 
 #combining data sets, to create a dataset with polls, snp and unemployent rate.
-
+Final = polls%>%
+  left_join( snp,
+             by = c("year", "month"))
+  left_join( unemployment,
+             by = c("year", "month"))
 
 ```
 
