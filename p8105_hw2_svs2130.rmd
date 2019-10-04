@@ -115,7 +115,7 @@ Final = polls%>%
 ```
 
 ## Interpretation
-There are `r nrow(polls)`, `r nrow(snp)`, `r nrow(unemployment)`, `r nrow(Final)` observations and `r ncol(polls)`, `r ncol(snp)`, `r ncol(unemployment)`, `r ncol(Final)` in the Polls per month dataset, snp data set, unemployment dataset and the final merged dataset respectively. The final dataset includes some key variables like `ncolnames(Final)`. The range of yeats `r min(pull(polls, year))` to `r min(pull(polls, year))`
+There are `r nrow(polls)`, `r nrow(snp)`, `r nrow(unemployment)`, `r nrow(Final)` observations and `r ncol(polls)`, `r ncol(snp)`, `r ncol(unemployment)`, `r ncol(Final)` in the Polls per month dataset, snp data set, unemployment dataset and the final merged dataset respectively. The final dataset includes some key variables like `r colnames(Final)`. The range of years `r min(pull(polls, year))` to `r max(pull(polls, year))`
 
 #Problem 3:
 
